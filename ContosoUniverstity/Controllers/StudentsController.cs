@@ -1,5 +1,6 @@
 ﻿using ContosoUniverstity.Data;
 using ContosoUniverstity.Models;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net.Sockets;
@@ -73,7 +74,7 @@ namespace ContosoUniverstity.Controllers
             return View(await _context.Students.ToListAsync());
         }
         */
-        //createget, haarab vaatest andmed, mida create meetod vajab.
+        //create get, haarab vaatest andmed, mida create meetod vajab.
         [HttpGet]
         public IActionResult Create()
         {
@@ -94,5 +95,36 @@ namespace ContosoUniverstity.Controllers
             }
             return View(student);
         }
+
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var student = await _context.Students
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (student == null)
+            {
+                return NotFound();
+            }
+
+            return View(student);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var student = await _context.Students.FindAsync(id);
+
+            _context.Students.Remove(student);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
     }
 }

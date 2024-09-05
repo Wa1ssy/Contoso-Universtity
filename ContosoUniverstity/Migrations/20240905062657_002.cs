@@ -5,7 +5,7 @@
 namespace ContosoUniverstity.Migrations
 {
     /// <inheritdoc />
-    public partial class enrollmentoptional : Migration
+    public partial class _002 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
