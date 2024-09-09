@@ -162,12 +162,14 @@ namespace ContosoUniverstity.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,LastName,FirstMidName,EnrollmentDate")] Student student)
+        public async Task<IActionResult> Edit(int id)
         {
-            if (id != student.Id)
+            if (id == null)
             {
                 return NotFound();
             }
+            var student = await _context.Students
+                .FirstOrDefaultAsync();
 
             if (ModelState.IsValid)
             {
@@ -189,12 +191,21 @@ namespace ContosoUniverstity.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+
+            foreach (var value in ModelState.Values)
+            {
+                foreach (var error in value.Errors)
+                {
+                    Console.WriteLine(error.ErrorMessage);
+                }
+            }
+
             return View(student);
         }
 
         private bool StudentExists(int id)
         {
-            return _context.Students.Any(e => e.Id == id);
+            throw new NotImplementedException();
         }
 
         public async Task<IActionResult> Clone(int id)

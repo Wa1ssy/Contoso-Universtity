@@ -21,5 +21,10 @@ namespace ContosoUniverstity.Data
             modelBuilder.Entity<Enrollment>().ToTable("Enrollment");
             modelBuilder.Entity<Student>().ToTable("Student");*/
         }
+
+        internal void Update(object student)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
