@@ -2,6 +2,7 @@
 using ContosoUniverstity.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 namespace ContosoUniverstity.Controllers
 {
@@ -75,6 +76,31 @@ namespace ContosoUniverstity.Controllers
                     instructor.CourseAssignments.Add(courseToAdd);
                 }
             }
+            if (ModelState.IsValid)
+            {
+                _context.Add(instructor);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Index");
+            }
+            PopulateAssignedCourseData(instructor);
+            return View(instructor);
+        }
+
+        private void PopulateAssignedCourseData(Instructor instructor)
+        {
+            var allCourses = _context.Courses;
+            var instructorCourses = new HashSet<int>(instructor.CourseAssignments.Select(c => c.CourseId));
+            var vm = new List<AssignedCourseData>();
+            foreach (var course in allCourses)
+            {
+                vm.Add(new AssignedCourseData
+                {
+                    CourseId = course.CourseID,
+                    Title = course.Title,
+                    Assigned = instructorCourses.Contains(course.CourseID)
+                });
+            }
+            ViewData["Courses"] = vm;
         }
     }
 }
