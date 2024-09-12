@@ -162,7 +162,7 @@ namespace ContosoUniverstity.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Student student)
+        public async Task<IActionResult> Editi(int id, Student student)
         {
             if (id != student.Id)
             {

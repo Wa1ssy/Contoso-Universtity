@@ -58,6 +58,23 @@ namespace ContosoUniverstity.Controllers
             return View();
         }
 
-
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(Instructor instructor, string selectedCourse)
+        {
+            if (selectedCourse == null)
+            {
+                instructor.CourseAssignments = new List<CourseAssignment>();
+                foreach (var course in selectedCourse)
+                {
+                    var courseToAdd = new CourseAssignment
+                    {
+                        InstructorId = instructor.Id,
+                        CourseId = course
+                    };
+                    instructor.CourseAssignments.Add(courseToAdd);
+                }
+            }
+        }
     }
 }
