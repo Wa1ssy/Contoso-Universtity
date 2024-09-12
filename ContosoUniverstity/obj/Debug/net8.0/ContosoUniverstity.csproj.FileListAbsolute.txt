@@ -320,7 +320,6 @@ C:\Users\opilane\source\repos\Contoso-Universtity\ContosoUniverstity\obj\Debug\n
 C:\Users\opilane\source\repos\Contoso-Universtity\ContosoUniverstity\obj\Debug\net8.0\ContosoUniverstity.pdb
 C:\Users\opilane\source\repos\Contoso-Universtity\ContosoUniverstity\obj\Debug\net8.0\ContosoUniverstity.genruntimeconfig.cache
 C:\Users\opilane\source\repos\Contoso-Universtity\ContosoUniverstity\obj\Debug\net8.0\ref\ContosoUniverstity.dll
-C:\Users\opilane\Source\Repos\Contoso-Universtity\ContosoUniverstity\bin\Debug\net8.0\System.Text.Json.dll
 C:\Users\awesa\source\repos\Contoso-Universtity\ContosoUniverstity\bin\Debug\net8.0\appsettings.Development.json
 C:\Users\awesa\source\repos\Contoso-Universtity\ContosoUniverstity\bin\Debug\net8.0\appsettings.json
 C:\Users\awesa\source\repos\Contoso-Universtity\ContosoUniverstity\bin\Debug\net8.0\ContosoUniverstity.staticwebassets.runtime.json

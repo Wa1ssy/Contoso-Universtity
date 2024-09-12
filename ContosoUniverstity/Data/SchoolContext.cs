@@ -28,9 +28,5 @@ namespace ContosoUniverstity.Data
             modelBuilder.Entity<Student>().ToTable("Student");*/
         }
 
-        internal void Update(object student)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

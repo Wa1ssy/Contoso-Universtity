@@ -162,14 +162,12 @@ namespace ContosoUniverstity.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id)
+        public async Task<IActionResult> Edit(int id, Student student)
         {
-            if (id == null)
+            if (id != student.Id)
             {
                 return NotFound();
             }
-            var student = await _context.Students
-                .FirstOrDefaultAsync();
 
             if (ModelState.IsValid)
             {
@@ -191,15 +189,6 @@ namespace ContosoUniverstity.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-
-            foreach (var value in ModelState.Values)
-            {
-                foreach (var error in value.Errors)
-                {
-                    Console.WriteLine(error.ErrorMessage);
-                }
-            }
-
             return View(student);
         }
 
