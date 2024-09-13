@@ -61,9 +61,9 @@ namespace ContosoUniverstity.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Instructor instructor, string selectedCourse)
+        public async Task<IActionResult> Create(Instructor instructor)
         {
-            if (selectedCourse == null)
+            /*if (selectedCourse == null)
             {
                 instructor.CourseAssignments = new List<CourseAssignment>();
                 foreach (var course in selectedCourse)
@@ -75,14 +75,15 @@ namespace ContosoUniverstity.Controllers
                     };
                     instructor.CourseAssignments.Add(courseToAdd);
                 }
-            }
+            }*/
+            //ModelState.Remove(selectedCourse);
             if (ModelState.IsValid)
             {
                 _context.Add(instructor);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            PopulateAssignedCourseData(instructor);
+            //PopulateAssignedCourseData(instructor);
             return View(instructor);
         }
 
