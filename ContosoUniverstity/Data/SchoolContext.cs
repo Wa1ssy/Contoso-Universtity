@@ -11,7 +11,7 @@ namespace ContosoUniverstity.Data
         public DbSet<Course> Courses { get; set; }
         public DbSet<Enrollment> Enrollments { get; set; }
         public DbSet<Student> Students { get; set; }
-        public DbSet<Instructor> Instructors { get; set; }
+        public DbSet<InstructorExists> Instructors { get; set; }
         public DbSet<OfficeAssignment> OfficeAssignments { get; set; }
         public DbSet<CourseAssignment> CourseAssignments { get; set; }
        // public DbSet<AssignedCourseData> CourseAssignments { get; set; }
@@ -21,7 +21,7 @@ namespace ContosoUniverstity.Data
             modelBuilder.Entity<Course>().ToTable("Course");
             modelBuilder.Entity<Enrollment>().ToTable("Enrollment");
             modelBuilder.Entity<Student>().ToTable("Student");
-            modelBuilder.Entity<Instructor>().ToTable("Instructor");
+            modelBuilder.Entity<InstructorExists>().ToTable("Instructor");
             modelBuilder.Entity<OfficeAssignment>().ToTable("OfficeAssignment");
             modelBuilder.Entity<CourseAssignment>().ToTable("CourseAssignment");
             //modelBuilder.Entity<AssignedCourseData>().ToTable("CourseAssignment");

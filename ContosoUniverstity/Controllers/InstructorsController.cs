@@ -33,7 +33,7 @@ namespace ContosoUniverstity.Controllers
             if (id != null)
             {
                 ViewData["InstructorId"] = id.Value;
-                Instructor instructor = vm.Instructors
+                InstructorExists instructor = vm.Instructors
                     .Where(i => i.Id == id.Value).Single();
                 vm.Courses = instructor.CourseAssignments
                     .Select(i => i.Course);
@@ -54,14 +54,14 @@ namespace ContosoUniverstity.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            var instructor = new Instructor();
+            var instructor = new InstructorExists();
             instructor.CourseAssignments = new List<CourseAssignment>();
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Instructor instructor)
+        public async Task<IActionResult> Create(InstructorExists instructor)
         {
             /*if (selectedCourse == null)
             {
@@ -87,7 +87,7 @@ namespace ContosoUniverstity.Controllers
             return View(instructor);
         }
 
-        private void PopulateAssignedCourseData(Instructor instructor)
+        private void PopulateAssignedCourseData(InstructorExists instructor)
         {
             var allCourses = _context.Courses;
             var instructorCourses = new HashSet<int>(instructor.CourseAssignments.Select(c => c.CourseId));
@@ -129,6 +129,80 @@ namespace ContosoUniverstity.Controllers
             var instructor = await _context.Instructors.FindAsync(id);
 
             _context.Instructors.Remove(instructor);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var instructor = await _context.Instructors.FindAsync(id);
+            if (instructor == null)
+            {
+                return NotFound();
+            }
+            return View(instructor);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, InstructorExists instructor)
+        {
+            if (id != instructor.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(instructor);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!InstructorExists(instructor.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(instructor);
+        }
+
+        private bool InstructorExists(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<IActionResult> Clone(int id)
+        {
+            var instructor = await _context.Instructors.FindAsync(id);
+
+            if (instructor == null)
+            {
+                return NotFound();
+            }
+
+            var ClonedInstructor = new InstructorExists
+            {
+                LastName = instructor.LastName,
+                FirstMidName = instructor.FirstMidName,
+                HireDate = instructor.HireDate,
+            };
+
+            _context.Instructors.Add(ClonedInstructor);
             await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
