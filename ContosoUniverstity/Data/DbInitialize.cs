@@ -10,7 +10,7 @@ namespace ContosoUniverstity.Data
             context.Database.EnsureCreated();
 
             //kui õpilaste tabelis juba on õpilasi, väljub funktsioonist
-            if (context.Students.Any())
+            if (context.Instructors.Any())
             {
                 return;
             }
