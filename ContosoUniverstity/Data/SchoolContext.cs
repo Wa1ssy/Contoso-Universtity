@@ -14,7 +14,7 @@ namespace ContosoUniverstity.Data
         public DbSet<InstructorExists> Instructors { get; set; }
         public DbSet<OfficeAssignment> OfficeAssignments { get; set; }
         public DbSet<CourseAssignment> CourseAssignments { get; set; }
-       // public DbSet<AssignedCourseData> CourseAssignments { get; set; }
+        // public DbSet<AssignedCourseData> CourseAssignments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

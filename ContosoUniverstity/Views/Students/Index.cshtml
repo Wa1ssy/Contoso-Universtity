@@ -27,25 +27,25 @@
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
-                <td>
+                <tr>
+                    <td>
                     @Html.DisplayFor(modeItem => item.LastName)
-                </td>
-                <td>
+                    </td>
+                    <td>
                     @Html.DisplayFor(modeItem => item.FirstMidName)
-                </td>
-                <td>
+                    </td>
+                    <td>
                     @Html.DisplayFor(modeItem => item.EnrollmentDate)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a>
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                    <form asp-action="Clone" asp-route-id="@item.Id" method="post" style="display:inline">
-                        <button type="submit" class="btn btn-link">clone</button>
-                    </form>
-                </td>
-            </tr>
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        <form asp-action="Clone" asp-route-id="@item.Id" method="post" style="display:inline">
+                            <button type="submit" class="btn btn-link">clone</button>
+                        </form>
+                    </td>
+                </tr>
         }
     </tbody>
 </table>
