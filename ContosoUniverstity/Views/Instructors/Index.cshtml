@@ -4,11 +4,11 @@
 }
 <h2>Instructors</h2>
 <p>
-    <a asp-action="Create">Create New Instructor</a>
+    <a class="btn btn-primary mb-3" asp-action="Create">Create New Instructor</a>
 </p>
 
-<table>
-    <thead>
+<table class="table table-bordered table-hover">
+    <thead class="thead-dark">
         <tr>
             <th>Last Name</th>
             <th>First Name</th>
@@ -16,7 +16,7 @@
             <th>Office Location</th>
             <th>Courses</th>
             <th>Birthday</th>
-            <th></th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -25,31 +25,32 @@
             string selectedRow = "";
             if (item.Id == (int?)ViewData["InstructorID"])
             {
-                selectedRow = "tabel-success";
+                selectedRow = "table-success";
             }
             <tr class="@selectedRow">
                 <td>@Html.DisplayFor(modelItem => item.LastName)</td>
+
                 <td>@Html.DisplayFor(modelItem => item.FirstMidName)</td>
+
                 <td>@Html.DisplayFor(modelItem => item.HireDate)</td>
+
+                <td>@Html.DisplayFor(modelItem => item.OfficeAssignment.Location)</td>
                 <td>
                     @foreach (var courses in item.CourseAssignments)
                     {
-                        @courses.Course.CourseID @: @courses.Course.Title <br />
+                        @courses.Course.Title <br />
                     }
                 </td>
-                <td>@Html.DisplayFor(modelItem => item.Birthday)</td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a>
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                    <a asp-action="Clone" asp-route-id="@item.Id">Clone</a>
-                </td>
 
+                <td>@Html.DisplayFor(modelItem => item.Birthday)</td>
+
+                <td>
+                    <a class="btn btn-primary btn-sm m-1" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                    <a class="btn btn-info btn-sm m-1" asp-action="Details" asp-route-id="@item.Id">Details</a>
+                    <a class="btn btn-danger btn-sm m-1" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    <a class="btn btn-secondary btn-sm m-1" asp-action="Clone" asp-route-id="@item.Id">Clone</a>
+                </td>
             </tr>
         }
     </tbody>
 </table>
-
-@* addon 1 *@
-
-@* addon 2 *@

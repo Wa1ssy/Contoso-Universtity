@@ -102,14 +102,14 @@ namespace ContosoUniverstity.Migrations
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("StatusId")
+                    b.Property<int>("StudentId")
                         .HasColumnType("int");
 
                     b.HasKey("DepartmentId");
 
                     b.HasIndex("AdministratorId");
 
-                    b.HasIndex("StatusId");
+                    b.HasIndex("StudentId");
 
                     b.ToTable("Department", (string)null);
                 });
@@ -249,7 +249,9 @@ namespace ContosoUniverstity.Migrations
 
                     b.HasOne("ContosoUniverstity.Models.Student", "Status")
                         .WithMany()
-                        .HasForeignKey("StatusId");
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Administrator");
 
