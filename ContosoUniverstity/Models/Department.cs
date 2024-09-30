@@ -19,7 +19,7 @@ namespace ContosoUniverstity.Models
         /*
          */
         public Student? Status { get; set; }
-        public int StudentId { get; set; }
+        public int? StudentId { get; set; }
         public string Aadress {  get; set; }
         [StringLength (30, MinimumLength = 5)]
         public int? InstructorId { get; set; }
