@@ -23,7 +23,6 @@ namespace ContosoUniverstity.Models
         public string Aadress {  get; set; }
         [StringLength (30, MinimumLength = 5)]
         public int? InstructorId { get; set; }
-        [Timestamp]
         public byte? RowVersion { get; set; }
         public InstructorExists? Administrator { get; set; }
         public ICollection<Course>? Courses { get; set; }

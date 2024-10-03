@@ -89,6 +89,11 @@ namespace ContosoUniverstity.Data
                     FirstMidName = "Shirt",
                     HireDate = DateTime.Parse("2069-04-20"),
                 },
+                 new InstructorExists
+                {
+                    LastName = "Guy1",
+                    FirstMidName = "Shirt1",
+                },
             };
             context.Instructors.AddRange(instructors);
             context.SaveChanges();

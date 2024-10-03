@@ -54,9 +54,9 @@ namespace ContosoUniverstity.Controllers
             {
                 _context.Departments.Add(department);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(Index));
             }
-            ViewData["InstructorId"] = new SelectList(_context.Instructors, "Id", "FullName", department.InstructorId);
+            ViewData["InstructorId"] = new SelectList(_context.Instructors, "Id", "FullName");
             return View(department);
         }
 
