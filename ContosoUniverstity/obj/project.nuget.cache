@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "ep/wH1S7jrc=",
+  "dgSpecHash": "vtIzEMBAV6mW6hFrPqMaR4An3eOfY/T7rqe531eUDS4OhQGdGpt1PJloambmqxfDVvredq7bgnZ86hJNANMgDg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\opilane\\Source\\Repos\\Contoso-Universtity\\ContosoUniverstity\\ContosoUniverstity.csproj",
+  "projectFilePath": "C:\\Users\\opilane\\source\\repos\\Contoso-Universtity\\ContosoUniverstity\\ContosoUniverstity.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\opilane\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",
     "C:\\Users\\opilane\\.nuget\\packages\\azure.identity\\1.10.3\\azure.identity.1.10.3.nupkg.sha512",
@@ -24,6 +24,7 @@
     "C:\\Users\\opilane\\.nuget\\packages\\microsoft.entityframeworkcore.design\\8.0.8\\microsoft.entityframeworkcore.design.8.0.8.nupkg.sha512",
     "C:\\Users\\opilane\\.nuget\\packages\\microsoft.entityframeworkcore.relational\\8.0.8\\microsoft.entityframeworkcore.relational.8.0.8.nupkg.sha512",
     "C:\\Users\\opilane\\.nuget\\packages\\microsoft.entityframeworkcore.sqlserver\\8.0.8\\microsoft.entityframeworkcore.sqlserver.8.0.8.nupkg.sha512",
+    "C:\\Users\\opilane\\.nuget\\packages\\microsoft.entityframeworkcore.tools\\8.0.8\\microsoft.entityframeworkcore.tools.8.0.8.nupkg.sha512",
     "C:\\Users\\opilane\\.nuget\\packages\\microsoft.extensions.caching.abstractions\\8.0.0\\microsoft.extensions.caching.abstractions.8.0.0.nupkg.sha512",
     "C:\\Users\\opilane\\.nuget\\packages\\microsoft.extensions.caching.memory\\8.0.0\\microsoft.extensions.caching.memory.8.0.0.nupkg.sha512",
     "C:\\Users\\opilane\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\8.0.0\\microsoft.extensions.configuration.abstractions.8.0.0.nupkg.sha512",
