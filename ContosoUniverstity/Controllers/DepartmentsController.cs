@@ -38,39 +38,7 @@ namespace ContosoUniverstity.Controllers
             return View(department);
         }
 
-        private bool DepartmentExists(int id)
-        {
-            return _context.Departments.Any(e => e.DepartmentId == id);
-        }
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var department = await _context.Departments
-                .FirstOrDefaultAsync(m => m.DepartmentId == id);
-
-            if (department == null)
-            {
-                return NotFound();
-            }
-
-            return View(department);
-        }
-
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var department = await _context.Departments.FindAsync(id);
-
-            _context.Departments.Remove(department);
-            await _context.SaveChangesAsync();
-
-            return RedirectToAction(nameof(Index));
-        }
+        
 
         [HttpGet]
         public IActionResult Create()
