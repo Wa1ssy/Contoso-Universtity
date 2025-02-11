@@ -18,4 +18,18 @@ public class CoursesController : Controller
         return View(courses);
     }
 
+    public async Task<IActionResult> Details(int? id)
+    {
+        if (id == null) return NotFound();
+
+        var course = await _context.Courses
+            .Include(c => c.Enrollments)
+            .FirstOrDefaultAsync(m => m.CourseID == id);
+
+        if (course == null) return NotFound();
+
+        ViewData["IsDeleteView"] = false;
+        return View("DetailsDelete", course);
+    }
+
 }
