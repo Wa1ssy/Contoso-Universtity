@@ -12,5 +12,10 @@ public class CoursesController : Controller
     {
         _context = context;
     }
+    public async Task<IActionResult> Index()
+    {
+        var courses = await _context.Courses.ToListAsync();
+        return View(courses);
+    }
 
 }
