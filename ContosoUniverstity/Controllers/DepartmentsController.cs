@@ -38,82 +38,11 @@ namespace ContosoUniverstity.Controllers
             return View(department);
         }
 
-
-    
-    [HttpGet]
-        public IActionResult Create()
-        {
-            ViewData["InstructorID"] = new SelectList(_context.Instructors, "Id", "FullName");
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Budget,StartDate,RowVersion,InstructorID,Aadress,Status")] Department department)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(department);
-                await _context.SaveChangesAsync();
-                return RedirectToAction("Index");
-            }
-            ViewData["InstructorID"] = new SelectList(_context.Instructors, "Id", "FullName", department.InstructorId);
-            return View(department);
-        }
-        [HttpGet]
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var department = await _context.Departments.FindAsync(id);
-            if (department == null)
-            {
-                return NotFound();
-            }
-            ViewData["InstructorID"] = new SelectList(_context.Instructors, "Id", "FullName", department.InstructorId);
-            return View(department);
-        }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("DepartmentID, Name, Budget, StartDate, InstructorId, Aadress, Status, Rowversion")] Department department)
-        {
-            if (id != department.DepartmentId)
-            {
-                return NotFound();
-            }
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(department);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!DepartmentExists(department.DepartmentId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-
-            ViewData["InstructorID"] = new SelectList(_context.Instructors, "Id", "FullName", department.InstructorId);
-            return View(department);
-        }
-
         private bool DepartmentExists(int id)
         {
             return _context.Departments.Any(e => e.DepartmentId == id);
         }
-                public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
@@ -142,61 +71,29 @@ namespace ContosoUniverstity.Controllers
 
             return RedirectToAction(nameof(Index));
         }
-        public async Task<IActionResult> BaseOn(int? id)
+
+        [HttpGet]
+        public IActionResult Create()
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var department = await _context.Departments.FindAsync(id);
-            if (department == null)
-            {
-                return NotFound();
-            }
-
-            ViewData["InstructorId"] = new SelectList(_context.Instructors, "Id", "FullName");
-            return View(department);
+            ViewData["InstructorID"] = new SelectList(_context.Instructors, "Id", "FullName");
+            return View();
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> BaseOn(int id, [Bind("DepartmentID,Name,Budget,StartDate,Aadress,InstructorId")] Department department, string actionType)
+        public async Task<IActionResult> Create([Bind("Name,Budget,StartDate,RowVersion,InstructorID,Aadress,Status")] Department department)
         {
-            if (id != department.DepartmentId)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
-                var newDepartment = new Department
-                {
-                    Name = department.Name,
-                    Budget = department.Budget,
-                    StartDate = department.StartDate,
-                    Aadress = department.Aadress,
-                    InstructorId = department.InstructorId
-                };
-
-                _context.Add(newDepartment);
+                _context.Add(department);
                 await _context.SaveChangesAsync();
-
-                if (actionType == "Make & Delete Old")
-                {
-                    var oldDepartment = await _context.Departments.FindAsync(id);
-                    if (oldDepartment != null)
-                    {
-                        _context.Departments.Remove(oldDepartment);
-                        await _context.SaveChangesAsync();
-                    }
-                }
-
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index");
             }
-
-            ViewData["InstructorId"] = new SelectList(_context.Instructors, "Id", "FullName", department.InstructorId);
+            ViewData["InstructorID"] = new SelectList(_context.Instructors, "Id", "FullName", department.InstructorId);
             return View(department);
         }
+
+        
     }
 }
 
