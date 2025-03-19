@@ -1,5 +1,4 @@
 ﻿using ContosoUniverstity.Models;
-using ContosoUniverstity.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace ContosoUniverstity.Data

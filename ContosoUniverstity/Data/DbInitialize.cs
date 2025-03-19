@@ -106,16 +106,14 @@ namespace ContosoUniverstity.Data
                     Name = "IT",
                     Budget = 0,
                     StartDate = DateTime.Parse("2024-09-01"),
-                    InstructorId = 1,
-                    Aadress = "Pae 25",
+                    InstructorID = 1,
                 },
                 new Department
                 {
                     Name = "English",
                     Budget = 1000,
                     StartDate = DateTime.Parse("2024-08-02"),
-                    InstructorId = 2,
-                    Aadress = "Pae 14"
+                    InstructorID = 2,
                 },
             };
             context.Departments.AddRange(departments);
