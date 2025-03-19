@@ -39,8 +39,8 @@ namespace ContosoUniverstity.Controllers
         }
 
 
-    
-    [HttpGet]
+
+        [HttpGet]
         public IActionResult Create()
         {
             ViewData["InstructorID"] = new SelectList(_context.Instructors, "Id", "FullName");
@@ -60,9 +60,39 @@ namespace ContosoUniverstity.Controllers
             ViewData["InstructorID"] = new SelectList(_context.Instructors, "Id", "FullName", department.InstructorId);
             return View(department);
         }
-        
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-        
+            var department = await _context.Departments
+                .FirstOrDefaultAsync(m => m.DepartmentID == id);
+
+            if (department == null)
+            {
+                return NotFound();
+            }
+
+            return View(department);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var department = await _context.Departments.FindAsync(id);
+
+            _context.Departments.Remove(department);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+
+
+    }
 }
 
 
