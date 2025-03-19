@@ -2,7 +2,6 @@
 using ContosoUniverstity.Models;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Net.Sockets;
 
@@ -18,8 +17,15 @@ namespace ContosoUniverstity.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Students.ToListAsync());
+            var students = await _context.Students
+                .Include(s => s.Enrollments)
+                    .ThenInclude(e => e.Course)
+                .AsNoTracking()
+                .ToListAsync();
+
+            return View(students);
         }
+
 
         /*
         public async Task<IActionResult> Index(
@@ -161,6 +167,17 @@ namespace ContosoUniverstity.Controllers
             return View(student);
         }
 
+        public async Task<IActionResult> ManageGrades()
+        {
+            var students = await _context.Students
+                .Include(s => s.Enrollments)
+                    .ThenInclude(e => e.Course)
+                .AsNoTracking()
+                .ToListAsync();
+
+            return View(students);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Student student)
@@ -219,43 +236,8 @@ namespace ContosoUniverstity.Controllers
 
             return RedirectToAction(nameof(Index));
         }
-        [HttpGet]
-        public IActionResult AssignGrade()
-        {
-            ViewBag.Students = new SelectList(_context.Students, "ID", "FullName");
-            ViewBag.Courses = new SelectList(_context.Courses, "CourseID", "Title");
-
-            return View();
-        }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AssignGrade(int studentID, int courseID, Grade? grade)
-        {
-            if (studentID == 0 || courseID == 0 || grade == null)
-            {
-                ModelState.AddModelError("", "All fields are required.");
-                return View();
-            }
-
-            var enrollment = await _context.Enrollments
-                .FirstOrDefaultAsync(e => e.StudentID == studentID && e.CourseID == courseID);
-
-            if (enrollment == null)
-            {
-                ModelState.AddModelError("", "Enrollment not found for this student and course.");
-                return View();
-            }
-
-            enrollment.Grade = grade;
-            await _context.SaveChangesAsync();
-
-            return RedirectToAction(nameof(Index));
-        }
-        /* hinnete panemiseks on vaja teha views kausta vaade "assigngrade"
-         kontrollerisse selle vaate GET meetod, ning post meetod.
-        post meetod sisestab olemasoleva õpilase tabelisse hinde
-        kuvatakse aga õpilase ees ja perekonnanimi näiteks ka ning vajadusel eelnevalt olemasolev hinne*/
 
 
     }
 }
+// Lisasin siia kommentaari sest viimased muudetused edit ja clone buttoniks olid tehtud siin

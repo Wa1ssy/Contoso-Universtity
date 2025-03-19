@@ -9,13 +9,15 @@ namespace ContosoUniverstity.Controllers
     public class DepartmentsController : Controller
     {
         private readonly SchoolContext _context;
+
         public DepartmentsController(SchoolContext context)
         {
             _context = context;
         }
+
         public async Task<IActionResult> Index()
         {
-            var schoolContext = _context.Departments.Include(department => department.Administrator);
+            var schoolContext = _context.Departments.Include(d => d.Administrator);
             return View(await schoolContext.ToListAsync());
         }
 
@@ -25,8 +27,10 @@ namespace ContosoUniverstity.Controllers
             {
                 return NotFound();
             }
-            string query = "SELECT * FROM Departments WHERE DepartmentID = {0}";
-            var department = await _context.Departments.FromSqlRaw(query, id).Include(d => d.Administrator).AsNoTracking().FirstOrDefaultAsync();
+
+            var department = await _context.Departments
+                .FirstOrDefaultAsync();
+
             if (department == null)
             {
                 return NotFound();
@@ -35,16 +39,17 @@ namespace ContosoUniverstity.Controllers
         }
 
 
-        [HttpGet]
+    
+    [HttpGet]
         public IActionResult Create()
         {
-            ViewData["InstructorID"] = new SelectList(_context.Instructors, "ID", "FullName");
+            ViewData["InstructorID"] = new SelectList(_context.Instructors, "Id", "FullName");
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Budget,StartDate,RowVersion,InstructorID,SuperImportantString")] Department department)
+        public async Task<IActionResult> Create([Bind("Name,Budget,StartDate,RowVersion,InstructorID,Aadress,Status")] Department department)
         {
             if (ModelState.IsValid)
             {
@@ -52,53 +57,7 @@ namespace ContosoUniverstity.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewData["InstructorID"] = new SelectList(_context.Instructors, "ID", "FullName",department.InstructorID);
-            return View(department);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> BaseOn(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-            string query = "SELECT * FROM Departments WHERE DepartmentID = {0}";
-            var department = await _context.Departments.FromSqlRaw(query, id).Include(d => d.Administrator).AsNoTracking().FirstOrDefaultAsync();
-            if (department == null)
-            {
-                return NotFound();
-            }
-            ViewData["InstructorID"] = new SelectList(_context.Instructors, "ID", "FullName");
-            return View(department);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> MakeAndDeleteOld([Bind("DepartmentID,Name,Budget,StartDate,RowVersion,InstructorID,SuperImportantString")] Department department)
-        {
-            if (ModelState.IsValid)
-            {
-                var existingDepartment = await _context.Departments.FindAsync(department.DepartmentID);
-
-                if (existingDepartment == null)
-                {
-                    return NotFound();
-                }
-                var departmentClone = new Department
-                {
-                    Name = department.Name,
-                    Budget = department.Budget,
-                    StartDate = department.StartDate,
-                    SuperImportantString = department.SuperImportantString,
-                    InstructorID = department.InstructorID
-                };
-
-                _context.Remove(existingDepartment);
-                _context.Add(departmentClone);
-                await _context.SaveChangesAsync();
-                return RedirectToAction("Index");
-            }
+            ViewData["InstructorID"] = new SelectList(_context.Instructors, "Id", "FullName", department.InstructorId);
             return View(department);
         }
         [HttpGet]
@@ -108,59 +67,137 @@ namespace ContosoUniverstity.Controllers
             {
                 return NotFound();
             }
-            string query = "SELECT * FROM Departments WHERE DepartmentID = {0}";
-            var department = await _context.Departments.FromSqlRaw(query, id).Include(d => d.Administrator).AsNoTracking().FirstOrDefaultAsync();
+
+            var department = await _context.Departments.FindAsync(id);
             if (department == null)
             {
                 return NotFound();
             }
-            ViewData["InstructorID"] = new SelectList(_context.Instructors, "ID", "FullName");
+            ViewData["InstructorID"] = new SelectList(_context.Instructors, "Id", "FullName", department.InstructorId);
             return View(department);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit([Bind("DepartmentID,InstructorID,Name,Budget,StartDate,SuperImportantString")] Department department)
+        public async Task<IActionResult> Edit(int id, [Bind("DepartmentID, Name, Budget, StartDate, InstructorId, Aadress, Status, Rowversion")] Department department)
         {
+            if (id != department.DepartmentID)
+            {
+                return NotFound();
+            }
             if (ModelState.IsValid)
             {
-                var existingDepartment = _context.Departments.AsNoTracking().FirstOrDefault(m => m.DepartmentID == department.DepartmentID);
-
-                if (existingDepartment == null)
+                try
                 {
-                    return NotFound();
+                    _context.Update(department);
+                    await _context.SaveChangesAsync();
                 }
-
-                _context.Departments.Update(department);
-                await _context.SaveChangesAsync();
-                return RedirectToAction("Index");
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!DepartmentExists(department.DepartmentID))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
             }
-            ViewData["InstructorID"] = new SelectList(_context.Instructors, "ID", "FullName");
+
+            ViewData["InstructorID"] = new SelectList(_context.Instructors, "Id", "FullName", department.InstructorId);
             return View(department);
         }
 
-        public async Task<IActionResult> Delete(int? id)
+        private bool DepartmentExists(int id)
+        {
+            return _context.Departments.Any(e => e.DepartmentID == id);
+        }
+                public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
-            string query = "SELECT * FROM Departments WHERE DepartmentID = {0}";
-            var department = await _context.Departments.FromSqlRaw(query, id).Include(d => d.Administrator).AsNoTracking().FirstOrDefaultAsync();
+
+            var department = await _context.Departments
+                .FirstOrDefaultAsync(m => m.DepartmentID == id);
+
             if (department == null)
             {
                 return NotFound();
             }
+
             return View(department);
         }
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int ID)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var department = await _context.Departments.FindAsync(ID);
+            var department = await _context.Departments.FindAsync(id);
+
             _context.Departments.Remove(department);
             await _context.SaveChangesAsync();
-            return RedirectToAction("Index");
+
+            return RedirectToAction(nameof(Index));
+        }
+        public async Task<IActionResult> BaseOn(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var department = await _context.Departments.FindAsync(id);
+            if (department == null)
+            {
+                return NotFound();
+            }
+
+            ViewData["InstructorId"] = new SelectList(_context.Instructors, "Id", "FullName");
+            return View(department);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> BaseOn(int id, [Bind("DepartmentID,Name,Budget,StartDate,Aadress,InstructorId")] Department department, string actionType)
+        {
+            if (id != department.DepartmentID)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                var newDepartment = new Department
+                {
+                    Name = department.Name,
+                    Budget = department.Budget,
+                    StartDate = department.StartDate,
+                    Aadress = department.Aadress,
+                    InstructorId = department.InstructorId
+                };
+
+                _context.Add(newDepartment);
+                await _context.SaveChangesAsync();
+
+                if (actionType == "Make & Delete Old")
+                {
+                    var oldDepartment = await _context.Departments.FindAsync(id);
+                    if (oldDepartment != null)
+                    {
+                        _context.Departments.Remove(oldDepartment);
+                        await _context.SaveChangesAsync();
+                    }
+                }
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            ViewData["InstructorId"] = new SelectList(_context.Instructors, "Id", "FullName", department.InstructorId);
+            return View(department);
         }
     }
 }
+
+

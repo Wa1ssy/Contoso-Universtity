@@ -13,7 +13,7 @@ namespace ContosoUniverstity.Data
         public DbSet<InstructorExists> Instructors { get; set; }
         public DbSet<OfficeAssignment> OfficeAssignments { get; set; }
         public DbSet<CourseAssignment> CourseAssignments { get; set; }
-        public DbSet<Department> Departments { get; set; }
+       public DbSet<Department> Departments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -23,10 +23,10 @@ namespace ContosoUniverstity.Data
             modelBuilder.Entity<InstructorExists>().ToTable("Instructor");
             modelBuilder.Entity<OfficeAssignment>().ToTable("OfficeAssignment");
             modelBuilder.Entity<CourseAssignment>().ToTable("CourseAssignment");
-            modelBuilder.Entity<Department>().ToTable("Department");
-            modelBuilder.Entity<Course>().ToTable("Course");
+            modelBuilder.Entity<Department>().ToTable("Departments");
+            /*modelBuilder.Entity<Course>().ToTable("Course");
             modelBuilder.Entity<Enrollment>().ToTable("Enrollment");
-            modelBuilder.Entity<Student>().ToTable("Student");
+            modelBuilder.Entity<Student>().ToTable("Student");*/
         }
 
     }

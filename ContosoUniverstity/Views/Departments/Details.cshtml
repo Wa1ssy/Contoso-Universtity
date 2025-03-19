@@ -2,42 +2,41 @@
 @{
     ViewData["Title"] = "Department";
 }
-
 <h1>Details</h1>
 <div>
-    <h2>Department</h2>
+    <h4>Department</h4>
     <hr />
     <dl class="row">
-        <dt> @Html.DisplayNameFor(m => m.Name)</dt>
-        <dt> @Html.DisplayFor(m => m.Name)</dt>
-        <dt> @Html.DisplayNameFor(m => m.Administrator)</dt>
-        <dt> @Html.DisplayFor(m => m.Administrator.FullName)</dt>
-        <dt> @Html.DisplayNameFor(m => m.SuperImportantString)</dt>
-        <dt> @Html.DisplayFor(m => m.SuperImportantString)</dt>
-        <dt> @Html.DisplayNameFor(m => m.Budget)</dt>
-        <dt> @Html.DisplayFor(m => m.Budget)</dt>
-        <dt> @Html.DisplayNameFor(m => m.StartDate)</dt>
-        <dt> @Html.DisplayFor(m => m.StartDate)</dt>
+        <dt>@Html.DisplayNameFor(model => model.Name)</dt>
+        <dt>@Html.DisplayFor(model => model.Name)</dt>
+        <dt>@Html.DisplayNameFor(model => model.Administrator)</dt>
+        <dt>@Html.DisplayFor(model => model.Administrator.FullName)</dt>
+        <dt>@Html.DisplayNameFor(model => model.Budget)</dt>
+        <dt>@Html.DisplayFor(model => model.Budget)</dt>
+        <dt>@Html.DisplayNameFor(model => model.StartDate)</dt>
+        <dt>@Html.DisplayFor(model => model.StartDate)</dt>
+        <dt>@Html.DisplayNameFor(model => model.Aadress)</dt>
+        <dt>@Html.DisplayFor(model => model.Aadress)</dt>
         <dt>
             @{
-                if(Model.TotalInstructors != null)
+                if(Model.Status != null)
                 {
-                    @Html.DisplayNameFor(m => m.TotalInstructors);
+                    @Html.DisplayNameFor(model => model.Status)
                 }
             }
         </dt>
         <dt>
             @{
-                if (Model.TotalInstructors != null)
+                if (Model.Status != null)
                 {
-                    @Html.DisplayFor(m => m.TotalInstructors);
+                    @Html.DisplayFor(model => model.Status)
                 }
             }
         </dt>
-
     </dl>
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.DepartmentID" class="btn btn-warning">Edit</a>
-    <a asp-action="Index" class="btn btn-secondary">Back</a>
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+    
 </div>

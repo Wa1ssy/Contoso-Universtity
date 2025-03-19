@@ -75,19 +75,23 @@ namespace ContosoUniverstity.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DepartmentID"));
 
+                    b.Property<string>("Aadress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("AdministratorId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("Budget")
                         .HasColumnType("Money");
 
-                    b.Property<int?>("InstructorID")
+                    b.Property<int?>("InstructorId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<byte?>("RowVersion")
                         .IsConcurrencyToken()
@@ -97,15 +101,16 @@ namespace ContosoUniverstity.Migrations
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("SuperImportantString")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("StatusId")
+                        .HasColumnType("int");
 
                     b.HasKey("DepartmentID");
 
                     b.HasIndex("AdministratorId");
 
-                    b.ToTable("Department", (string)null);
+                    b.HasIndex("StatusId");
+
+                    b.ToTable("Departments", (string)null);
                 });
 
             modelBuilder.Entity("ContosoUniverstity.Models.Enrollment", b =>
@@ -145,9 +150,6 @@ namespace ContosoUniverstity.Migrations
                     b.Property<int?>("Birthday")
                         .HasColumnType("int");
 
-                    b.Property<int?>("DepartmentID")
-                        .HasColumnType("int");
-
                     b.Property<int?>("FavoriteClass")
                         .HasColumnType("int");
 
@@ -169,8 +171,6 @@ namespace ContosoUniverstity.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("DepartmentID");
 
                     b.ToTable("Instructor", (string)null);
                 });
@@ -246,7 +246,13 @@ namespace ContosoUniverstity.Migrations
                         .WithMany()
                         .HasForeignKey("AdministratorId");
 
+                    b.HasOne("ContosoUniverstity.Models.Student", "Status")
+                        .WithMany()
+                        .HasForeignKey("StatusId");
+
                     b.Navigation("Administrator");
+
+                    b.Navigation("Status");
                 });
 
             modelBuilder.Entity("ContosoUniverstity.Models.Enrollment", b =>
@@ -268,13 +274,6 @@ namespace ContosoUniverstity.Migrations
                     b.Navigation("Student");
                 });
 
-            modelBuilder.Entity("ContosoUniverstity.Models.InstructorExists", b =>
-                {
-                    b.HasOne("ContosoUniverstity.Models.Department", null)
-                        .WithMany("TotalInstructors")
-                        .HasForeignKey("DepartmentID");
-                });
-
             modelBuilder.Entity("ContosoUniverstity.Models.OfficeAssignment", b =>
                 {
                     b.HasOne("ContosoUniverstity.Models.InstructorExists", "Instructor")
@@ -294,8 +293,6 @@ namespace ContosoUniverstity.Migrations
             modelBuilder.Entity("ContosoUniverstity.Models.Department", b =>
                 {
                     b.Navigation("Courses");
-
-                    b.Navigation("TotalInstructors");
                 });
 
             modelBuilder.Entity("ContosoUniverstity.Models.InstructorExists", b =>

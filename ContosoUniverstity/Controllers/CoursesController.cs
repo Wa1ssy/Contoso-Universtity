@@ -1,142 +1,148 @@
 ﻿using ContosoUniverstity.Data;
-using ContosoUniverstity.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+using ContosoUniverstity.Models;
 using Microsoft.EntityFrameworkCore;
 
-public class CoursesController : Controller
+namespace ContosoUniverstity.Controllers
 {
-    private readonly SchoolContext _context;
+	public class CoursesController : Controller
+	{
+		private readonly SchoolContext _context;
 
-    public CoursesController(SchoolContext context)
-    {
-        _context = context;
-    }
-    public async Task<IActionResult> Index()
-    {
-        var courses = await _context.Courses.ToListAsync();
-        return View(courses);
-    }
+		public CoursesController(SchoolContext context)
+		{
+			_context = context;
+		}
 
-    public async Task<IActionResult> Details(int? id)
-    {
-        if (id == null) return NotFound();
+		public async Task<IActionResult> Index()
+		{
+			return View(await _context.Courses.ToListAsync());
+		}
+		[HttpGet, ActionName("DetailsDelete")]
+		public async Task<IActionResult> Details(int? id, string name)
+		{
+			if (id == null)
+			{
+				return NotFound();
+			}
+			var course = await _context.Courses.FirstOrDefaultAsync(m => m.CourseID == id);
+			if (course == null)
+			{
+				return NotFound();
+			}
 
-        var course = await _context.Courses
-            .Include(c => c.Enrollments)
-            .FirstOrDefaultAsync(m => m.CourseID == id);
+			if (name != "Details" && name != "Delete")
+			{
+				return NotFound();
+			}
 
-        if (course == null) return NotFound();
+			ViewBag.Title = name == "Details" ? "Course Details" : "Delete Course";
+			return View(course);
+		}
+		[HttpGet]
+		public async Task<IActionResult> CreateEdit(int? id)
+		{
+			if (id == null)
+			{
+				ViewBag.Title = "Create";
+				ViewBag.Description = "Create a new course";
+				return View();
+			}
+			var course = await _context.Courses.FindAsync(id);
+			if (course == null)
+			{
+				return NotFound();
+			}
+			ViewBag.Title = "Edit";
+			ViewBag.Description = "Edit course details";
+			return View(course);
+		}
+		[HttpPost]
+		[ValidateAntiForgeryToken]
 
-        ViewData["IsDeleteView"] = false;
-        return View("DetailsDelete", course);
-    }
+		public async Task<IActionResult> CreateEdit(Course course)
+		{
+			if (ModelState.IsValid)
+			{
+				if (course.CourseID == 0)
+				{
+					int biggestCourseID = await _context.Courses.AnyAsync()
+						? await _context.Courses.MaxAsync(c => c.CourseID)
+						: 0;
 
-    public async Task<IActionResult> Delete(int? id)
-    {
-        if (id == null) return NotFound();
+					course.CourseID = biggestCourseID + 1;
+					_context.Add(course);
+					await _context.SaveChangesAsync();
+				}
+				else
+				{
+					_context.Update(course);
+					await _context.SaveChangesAsync();
+				}
+				return RedirectToAction("Index");
+			}
 
-        var course = await _context.Courses
-            .Include(c => c.Enrollments)
-            .FirstOrDefaultAsync(m => m.CourseID == id);
+			ViewBag.Title = course.CourseID == 0 ? "Create" : "Edit";
+			ViewBag.Description = course.CourseID == 0 ? "Create a new course" : "Edit course details";
+			return View(course);
+		}
+		[HttpGet]
+		public async Task<IActionResult> Delete(int? id)
+		{
+			if (id == null)
+			{
+				return NotFound();
+			}
 
-        if (course == null) return NotFound();
+			var course = await _context.Courses.FirstOrDefaultAsync(m => m.CourseID == id);
+			if (course == null)
+			{
+				return NotFound();
+			}
 
-        ViewData["IsDeleteView"] = true;
-        return View("DetailsDelete", course);
-    }
+			ViewBag.Title = "Delete Course";
+			return View("DetailsDelete", course);
 
-    [HttpPost, ActionName("Delete")]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> DeleteConfirmed(int id)
-    {
-        var course = await _context.Courses.FindAsync(id);
+		}
 
-        if (course != null)
-        {
-            _context.Courses.Remove(course);
-            await _context.SaveChangesAsync();
-        }
+		[HttpPost, ActionName("Delete")]
+		[ValidateAntiForgeryToken]
 
-        return RedirectToAction(nameof(Index));
-    }
+		public async Task<IActionResult> DeleteConfirmed(int CourseID)
+		{
+			var course = await _context.Courses.FindAsync(CourseID);
+			if (course == null)
+			{
+				return NotFound();
+			}
 
-    public IActionResult Clone(int id)
-    {
-        var course = _context.Courses
-            .FirstOrDefault(m => m.CourseID == id);
+			_context.Courses.Remove(course);
+			await _context.SaveChangesAsync();
+			return RedirectToAction("Index");
+		}
 
-        if (course == null)
-        {
-            return NotFound();
-        }
+		public async Task<IActionResult> Clone(int? id)
+		{
+			if (id == null)
+			{
+				return NotFound();
+			}
+			var course = await _context.Courses.FindAsync(id);
+			if (course == null)
+			{
+				return NotFound();
+			}
 
-        var clonedCourse = new Course
-        {
-            Title = course.Title,
-            Credits = course.Credits,
-        };
-
-        _context.Add(clonedCourse);
-        _context.SaveChanges();
-
-        return RedirectToAction(nameof(Index));
-    }
-    public IActionResult Create()
-    {
-        return View("CreateEdit", new Course());
-    }
-
-    public async Task<IActionResult> Edit(int? id)
-    {
-        if (id == null)
-        {
-            return NotFound();
-        }
-
-        var course = await _context.Courses.FindAsync(id);
-        if (course == null)
-        {
-            return NotFound();
-        }
-
-        return View("CreateEdit", course);
-    }
-
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Save(Course course)
-    {
-        if (!ModelState.IsValid)
-        {
-            return View("CreateEdit", course);
-        }
-
-        if (course.CourseID == 0)
-        {
-            _context.Add(course);
-        }
-        else
-        {
-            try
-            {
-                _context.Update(course);
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!_context.Courses.Any(e => e.CourseID == course.CourseID))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-        }
-
-        await _context.SaveChangesAsync();
-        return RedirectToAction(nameof(Index));
-    }
-
+			var clonedCourse = new Course
+			{
+				Title = course.Title,
+				Credits = course.Credits
+			};
+			_context.Add(clonedCourse);
+			await _context.SaveChangesAsync();
+			return RedirectToAction("Index");
+		}
+	}
 }
+
+
